@@ -3,47 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nisâa Care - Calendrier Intelligent</title>
+<title>Nisâa Care V4.1 - Réglages</title>
 <style>
-body{font-family:sans-serif;background:#FFF5F8;color:#333;margin:0;padding:15px;text-align:center}
-h1{color:#B83280;margin:8px 0;font-size:26px}
-.btn{background:#B83280;color:white;padding:12px 20px;border:none;border-radius:30px;font-size:15px;margin:6px;cursor:pointer;width:90%;font-weight:bold}
+:root{
+--rose:#B83280;--bg:#FFF5F8;--card:#fff;--text:#333;--gris:#F5F5F5;
+--regles:#FFCDD2;--ghusl:#C8E6C9;--fertilite:#FFF9C4;--prediction:#FFECB3;
+}
+body.dark{--bg:#1a1a1a;--card:#2d2d2d;--text:#f0f0f0;--gris:#3a3a3a}
+body{font-family:sans-serif;background:var(--bg);color:var(--text);margin:0;padding:15px;text-align:center;transition:0.3s}
+h1{color:var(--rose);margin:8px 0;font-size:26px}
+.btn{background:var(--rose);color:white;padding:12px 20px;border:none;border-radius:30px;font-size:15px;margin:6px;cursor:pointer;width:90%;font-weight:bold}
 .btn-stop{background:#D32F2F}
-.card{background:white;padding:15px;border-radius:15px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,0.08);text-align:left}
-.bismi{font-size:12px;color:#666;margin-bottom:10px}
-.halal{font-size:11px;color:#B83280;font-weight:bold;background:#FCE4EC;padding:4px 8px;border-radius:20px;display:inline-block;margin-bottom:10px}
-h2{color:#B83280;font-size:17px;margin:0 0 10px 0}
+.btn-small{width:auto;padding:8px 15px;font-size:13px}
+.btn-icon{width:auto;padding:8px 12px;font-size:18px}
+.card{background:var(--card);padding:15px;border-radius:15px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,0.1);text-align:left;transition:0.3s}
+.bismi{font-size:12px;opacity:0.7;margin-bottom:10px}
+.halal{font-size:11px;color:var(--rose);font-weight:bold;background:#FCE4EC;padding:4px 8px;border-radius:20px;display:inline-block;margin-bottom:10px}
+body.dark.halal{background:#4a2a3a}
+h2{color:var(--rose);font-size:17px;margin:0 0 10px 0}
 .statut{font-size:15px;font-weight:bold;padding:8px;border-radius:10px;margin:8px 0;text-align:center}
 .autorise{background:#E8F5E9;color:#2E7D32}
+body.dark.autorise{background:#1b3a1d;color:#81c784}
 .interdit{background:#FFEBEE;color:#C62828}
-.info{font-size:13px;color:#666;margin:4px 0}
+body.dark.interdit{background:#3a1b1b;color:#ef5350}
+.info{font-size:13px;opacity:0.8;margin:4px 0}
 .hide{display:none}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .calendrier{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
-.jour{aspect-ratio:1;background:#F5F5F5;border-radius:8px;font-size:11px;padding:4px;display:flex;align-items:center;justify-content:center}
-.jour-header{font-weight:bold;background:none;color:#B83280;font-size:10px}
-.aujourdhui{border:2px solid #B83280;box-sizing:border-box}
-.regles{background:#FFCDD2;color:#C62828;font-weight:bold}
-.ghusl{background:#C8E6C9;color:#2E7D32;font-weight:bold}
-.fertilite{background:#FFF9C4;color:#F57F17}
-.prediction{background:#FFECB3;color:#E65100}
+.jour{aspect-ratio:1;background:var(--gris);border-radius:8px;font-size:11px;padding:4px;display:flex;align-items:center;justify-content:center}
+.jour-header{font-weight:bold;background:none;color:var(--rose);font-size:10px}
+.aujourdhui{border:2px solid var(--rose);box-sizing:border-box}
+.regles{background:var(--regles);color:#C62828;font-weight:bold}
+.ghusl{background:var(--ghusl);color:#2E7D32;font-weight:bold}
+.fertilite{background:var(--fertilite);color:#F57F17}
+.prediction{background:var(--prediction);color:#E65100}
 .legende{font-size:10px;display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;justify-content:center}
 .leg-item{display:flex;align-items:center;gap:3px}
 .leg-couleur{width:10px;height:10px;border-radius:3px}
+.input-group{margin:10px 0}
+label{font-size:13px;font-weight:bold;display:block;margin-bottom:5px}
+input,select{width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;background:var(--gris);color:var(--text);box-sizing:border-box}
+.dhikr-box{text-align:center;padding:15px;background:var(--gris);border-radius:10px;margin-top:10px}
+.dhikr-count{font-size:32px;font-weight:bold;color:var(--rose);margin:10px 0}
 </style>
 </head>
 <body>
-<p class="bismi">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+<div class="top-bar">
+<p class="bismi">بِسْمِ اللهِ</p>
+<button class="btn-icon" onclick="toggleDark()">🌙</button>
+</div>
 <h1>Nisâa Care 🌙</h1>
 <p class="halal">100% Halal • 100% Privé • Pour Allah</p>
 
-<div class="card">
+<div class="card" id="setupCard">
+<h2>⚙️ Mes Réglages</h2>
+<p class="info">Renseigne tes infos une seule fois ma sœur 🤍</p>
+<div class="input-group">
+<label>Date de début de tes DERNIÈRES règles :</label>
+<input type="date" id="dateDernieresRegles">
+</div>
+<div class="input-group">
+<label>Mes règles durent combien de jours?</label>
+<select id="dureeRegles">
+<option value="3">3 jours</option>
+<option value="4">4 jours</option>
+<option value="5" selected>5 jours</option>
+<option value="6">6 jours</option>
+<option value="7">7 jours</option>
+<option value="8">8 jours</option>
+<option value="9">9 jours</option>
+<option value="10">10 jours</option>
+</select>
+</div>
+<div class="input-group">
+<label>Mon cycle dure combien de jours?</label>
+<select id="dureeCycle">
+<option value="21">21 jours</option>
+<option value="24">24 jours</option>
+<option value="26">26 jours</option>
+<option value="28" selected>28 jours</option>
+<option value="30">30 jours</option>
+<option value="32">32 jours</option>
+<option value="35">35 jours</option>
+<option value="40">40 jours</option>
+</select>
+</div>
+<button class="btn" onclick="sauverReglages()">Enregistrer mes réglages</button>
+</div>
+
+<div class="card hide" id="mainCard">
 <h2>🗓️ Mon Cycle & Calendrier</h2>
 <div id="statutBox" class="statut autorise">Statut : Prière & Jeûne autorisés ✅</div>
-<p class="info" id="infoCycle"><b>Bienvenue ma sœur</b> - Clique ci-dessous au 1er jour</p>
+<p class="info" id="infoCycle"></p>
 <p class="info" id="infoGhusl"></p>
-
 <button class="btn" id="btnStart" onclick="startRegles()">Marquer 1er jour des règles</button>
 <button class="btn btn-stop hide" id="btnStop" onclick="stopRegles()">Marquer la fin + Ghusl fait</button>
+<button class="btn btn-small" onclick="ouvrirReglages()">⚙️ Modifier réglages</button>
 
 <div id="calendrierBox">
 <h2 style="margin-top:15px;font-size:15px">Calendrier du mois</h2>
@@ -57,17 +112,51 @@ h2{color:#B83280;font-size:17px;margin:0 0 10px 0}
 </div>
 </div>
 
-<div class="card">
-<h2>📚 Rappel Fiqh</h2>
-<p style="font-size:13px"><b>Menstrues :</b> Pas de salat, pas de jeûne, pas de tawaf, pas de toucher du mushaf.</p>
-<p style="font-size:13px"><b>Tu peux :</b> Dhikr, duas, écouter le Coran, apprendre, servir ta famille 🤍</p>
+<div class="card hide" id="dhikrCard">
+<h2>📿 Dhikr du Jour</h2>
+<div class="dhikr-box">
+<div>سُبْحَانَ اللهِ وَبِحَمْدِهِ</div>
+<div class="dhikr-count" id="dhikrCount">0</div>
+<button class="btn btn-small" onclick="compterDhikr()">+1 Tasbih</button>
+<button class="btn btn-small" onclick="resetDhikr()">↻</button>
+</div>
 </div>
 
-<p style="font-size:10px;margin-top:20px;color:#666">Nisâa Care V3.1 - Tes données restent sur ton téléphone. Amana & Pudeur.</p>
+<p style="font-size:10px;margin-top:20px;opacity:0.6">Nisâa Care V4.1 - Tes données restent sur ton téléphone. Amana & Pudeur.</p>
 
 <script>
 let dateDebut = localStorage.getItem('nissaDateDebut');
-let dureeCycle = 28, dureeRegles = 6;
+let dureeCycle = parseInt(localStorage.getItem('nissaDureeCycle')||28);
+let dureeRegles = parseInt(localStorage.getItem('nissaDureeRegles')||5);
+let dhikr = parseInt(localStorage.getItem('nissaDhikr')||0);
+
+if(localStorage.getItem('nissaDark')==='true') document.body.classList.add('dark');
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  localStorage.setItem('nissaDark',document.body.classList.contains('dark'));
+}
+
+function sauverReglages(){
+  const date = document.getElementById('dateDernieresRegles').value;
+  dureeRegles = parseInt(document.getElementById('dureeRegles').value);
+  dureeCycle = parseInt(document.getElementById('dureeCycle').value);
+  if(!date) return alert('Choisis la date de tes dernières règles ma sœur 🤍');
+  localStorage.setItem('nissaDateDebut',date);
+  localStorage.setItem('nissaDureeRegles',dureeRegles);
+  localStorage.setItem('nissaDureeCycle',dureeCycle);
+  dateDebut = date;
+  document.getElementById('setupCard').classList.add('hide');
+  document.getElementById('mainCard').classList.remove('hide');
+  updateAffichage();
+}
+
+function ouvrirReglages(){
+  document.getElementById('setupCard').classList.remove('hide');
+  document.getElementById('mainCard').classList.add('hide');
+  document.getElementById('dateDernieresRegles').value = dateDebut;
+  document.getElementById('dureeRegles').value = dureeRegles;
+  document.getElementById('dureeCycle').value = dureeCycle;
+}
 
 function updateAffichage() {
     const ajd = new Date(); ajd.setHours(0,0,0,0);
@@ -76,58 +165,52 @@ function updateAffichage() {
     const infoGhusl = document.getElementById('infoGhusl');
     const btnStart = document.getElementById('btnStart');
     const btnStop = document.getElementById('btnStop');
+    const dhikrCard = document.getElementById('dhikrCard');
 
     if (dateDebut) {
         const debut = new Date(dateDebut); debut.setHours(0,0,0,0);
         const diffJours = Math.floor((ajd - debut) / 86400000);
+        const joursRestantGhusl = dureeRegles - diffJours;
 
         if (diffJours >= 0 && diffJours < dureeRegles) {
             statutBox.className = 'statut interdit';
             statutBox.innerHTML = 'Statut : Pas de prière ni jeûne ❌';
-            infoCycle.innerHTML = `<b>Jour ${diffJours + 1}</b> de tes règles`;
-            infoGhusl.innerHTML = `Ghusl prévu dans ${dureeRegles - diffJours} jour(s) inchaAllah`;
+            infoCycle.innerHTML = `<b>Jour ${diffJours + 1}/${dureeRegles}</b> de tes règles`;
+            infoGhusl.innerHTML = `Ghusl prévu dans ${joursRestantGhusl} jour(s) inchaAllah`;
             btnStart.classList.add('hide'); btnStop.classList.remove('hide');
+            dhikrCard.classList.remove('hide');
         } else {
             statutBox.className = 'statut autorise';
             statutBox.innerHTML = 'Statut : Prière & Jeûne autorisés ✅';
             const prochain = new Date(debut); prochain.setDate(debut.getDate() + dureeCycle);
             const joursRest = Math.ceil((prochain - ajd) / 86400000);
             infoCycle.innerHTML = `<b>Prochaines règles :</b> Dans ${joursRest} jours`;
-            infoGhusl.innerHTML = `Qu'Allah accepte tes 'ibadat 🤍`;
+            infoGhusl.innerHTML = `Cycle de ${dureeCycle} jours • Règles ${dureeRegles} jours`;
             btnStart.classList.remove('hide'); btnStop.classList.add('hide');
-            if (diffJours >= dureeCycle) localStorage.removeItem('nissaDateDebut');
+            dhikrCard.classList.add('hide');
         }
         dessinerCalendrier(debut, ajd);
-    } else {
-        statutBox.className = 'statut autorise';
-        statutBox.innerHTML = 'Statut : Prière & Jeûne autorisés ✅';
-        infoCycle.innerHTML = `<b>Bienvenue ma sœur</b> - Clique au 1er jour de tes règles`;
-        infoGhusl.innerHTML = ''; btnStart.classList.remove('hide'); btnStop.classList.add('hide');
-        dessinerCalendrier(null, ajd);
     }
+    document.getElementById('dhikrCount').innerText = dhikr;
 }
 
 function dessinerCalendrier(debut, ajd) {
     const cal = document.getElementById('calendrier'); cal.innerHTML = '';
     const jours = ['L','M','M','J','V','S','D'];
     jours.forEach(j => cal.innerHTML += `<div class="jour jour-header">${j}</div>`);
-
     const premierJour = new Date(ajd.getFullYear(), ajd.getMonth(), 1);
     const decalage = (premierJour.getDay() + 6) % 7;
     for(let i=0;i<decalage;i++) cal.innerHTML += `<div class="jour"></div>`;
-
     const nbJours = new Date(ajd.getFullYear(), ajd.getMonth()+1, 0).getDate();
-
     let finRegles, ovulation, fertiliteDebut, fertiliteFin, prochaines, prochainesFin;
     if(debut){
         finRegles = new Date(debut); finRegles.setDate(debut.getDate() + dureeRegles);
-        ovulation = new Date(debut); ovulation.setDate(debut.getDate() + 14);
+        ovulation = new Date(debut); ovulation.setDate(debut.getDate() + Math.floor(dureeCycle/2));
         fertiliteDebut = new Date(ovulation); fertiliteDebut.setDate(ovulation.getDate() - 3);
         fertiliteFin = new Date(ovulation); fertiliteFin.setDate(ovulation.getDate() + 1);
         prochaines = new Date(debut); prochaines.setDate(debut.getDate() + dureeCycle);
         prochainesFin = new Date(prochaines); prochainesFin.setDate(prochaines.getDate() + dureeRegles);
     }
-
     for(let d=1; d<=nbJours; d++){
         const dateBoucle = new Date(ajd.getFullYear(), ajd.getMonth(), d);
         let classe = 'jour';
@@ -145,17 +228,30 @@ function dessinerCalendrier(debut, ajd) {
 function startRegles() {
     const ajd = new Date().toISOString().split('T')[0];
     localStorage.setItem('nissaDateDebut', ajd); dateDebut = ajd;
-    alert('Qu’Allah te facilite ma sœur 🤍\nPas de prière ni jeûne jusqu’au Ghusl.');
+    alert('Qu’Allah te facilite ma sœur 🤍');
     updateAffichage();
 }
 
 function stopRegles() {
-    localStorage.removeItem('nissaDateDebut'); dateDebut = null;
-    alert('Alhamdoulillah! Ghusl fait 🤍\nReprends la prière. Qu’Allah accepte.');
+    const fin = new Date(dateDebut); fin.setDate(fin.getDate() + dureeRegles);
+    localStorage.setItem('nissaDateDebut', fin.toISOString().split('T')[0]);
+    dateDebut = fin.toISOString().split('T')[0];
+    alert('Alhamdoulillah! Ghusl fait 🤍\nReprends la prière.');
     updateAffichage();
 }
 
-updateAffichage();
+function compterDhikr(){ dhikr++; localStorage.setItem('nissaDhikr',dhikr); document.getElementById('dhikrCount').innerText=dhikr; }
+function resetDhikr(){ dhikr=0; localStorage.setItem('nissaDhikr',0); document.getElementById('dhikrCount').innerText=0; }
+
+// Au démarrage
+if(dateDebut){
+  document.getElementById('setupCard').classList.add('hide');
+  document.getElementById('mainCard').classList.remove('hide');
+  updateAffichage();
+} else {
+  document.getElementById('setupCard').classList.remove('hide');
+  document.getElementById('mainCard').classList.add('hide');
+}
 </script>
 </body>
 </html>
