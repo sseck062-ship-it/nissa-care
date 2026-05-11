@@ -9,7 +9,6 @@ body{font-family:sans-serif;background:#FFF5F8;color:#333;margin:0;padding:15px;
 h1{color:#B83280;margin:8px 0;font-size:26px}
 .btn{background:#B83280;color:white;padding:12px 20px;border:none;border-radius:30px;font-size:15px;margin:6px;cursor:pointer;width:90%;font-weight:bold}
 .btn-stop{background:#D32F2F}
-.btn-small{width:auto;padding:8px 15px;font-size:13px}
 .card{background:white;padding:15px;border-radius:15px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,0.08);text-align:left}
 .bismi{font-size:12px;color:#666;margin-bottom:10px}
 .halal{font-size:11px;color:#B83280;font-weight:bold;background:#FCE4EC;padding:4px 8px;border-radius:20px;display:inline-block;margin-bottom:10px}
@@ -20,9 +19,9 @@ h2{color:#B83280;font-size:17px;margin:0 0 10px 0}
 .info{font-size:13px;color:#666;margin:4px 0}
 .hide{display:none}
 .calendrier{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
-.jour{aspect-ratio:1;background:#F5F5F5;border-radius:8px;font-size:11px;padding:4px;display:flex;align-items:center;justify-content:center;position:relative}
+.jour{aspect-ratio:1;background:#F5F5F5;border-radius:8px;font-size:11px;padding:4px;display:flex;align-items:center;justify-content:center}
 .jour-header{font-weight:bold;background:none;color:#B83280;font-size:10px}
-.aujourdhui{border:2px solid #B83280}
+.aujourdhui{border:2px solid #B83280;box-sizing:border-box}
 .regles{background:#FFCDD2;color:#C62828;font-weight:bold}
 .ghusl{background:#C8E6C9;color:#2E7D32;font-weight:bold}
 .fertilite{background:#FFF9C4;color:#F57F17}
@@ -46,8 +45,8 @@ h2{color:#B83280;font-size:17px;margin:0 0 10px 0}
 <button class="btn" id="btnStart" onclick="startRegles()">Marquer 1er jour des règles</button>
 <button class="btn btn-stop hide" id="btnStop" onclick="stopRegles()">Marquer la fin + Ghusl fait</button>
 
-<div id="calendrierBox" class="hide">
-<h2 style="margin-top:15px;font-size:15px">Mois en cours</h2>
+<div id="calendrierBox">
+<h2 style="margin-top:15px;font-size:15px">Calendrier du mois</h2>
 <div class="calendrier" id="calendrier"></div>
 <div class="legende">
 <div class="leg-item"><div class="leg-couleur regles"></div>Règles</div>
@@ -62,16 +61,9 @@ h2{color:#B83280;font-size:17px;margin:0 0 10px 0}
 <h2>📚 Rappel Fiqh</h2>
 <p style="font-size:13px"><b>Menstrues :</b> Pas de salat, pas de jeûne, pas de tawaf, pas de toucher du mushaf.</p>
 <p style="font-size:13px"><b>Tu peux :</b> Dhikr, duas, écouter le Coran, apprendre, servir ta famille 🤍</p>
-<p style="font-size:13px"><b>Rattrapage :</b> Jeûnes du Ramadan à rattraper. Prières non.</p>
 </div>
 
-<div class="card">
-<h2>🤍 Ma Santé & Pureté</h2>
-<button class="btn btn-small" onclick="alert('Guide Ghusl :\n\n1. Niyyah\n2. Laver mains 3x\n3. Laver parties intimes\n4. Ablutions\n5. Eau sur tête 3x\n6. Côté droit puis gauche\n\nQu’Allah accepte 🤍')">Guide Ghusl</button>
-<button class="btn btn-small" onclick="alert('Dua douleurs :\n\nPose ta main et dis 3x : بِسْمِ اللهِ\n\nPuis 7x : أَعُوذُ بِاللهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ\n\nQu’Allah te soulage 🤍')">Duas douleurs</button>
-</div>
-
-<p style="font-size:10px;margin-top:20px;color:#666">Nisâa Care V3 - Tes données restent sur ton téléphone. Amana & Pudeur.</p>
+<p style="font-size:10px;margin-top:20px;color:#666">Nisâa Care V3.1 - Tes données restent sur ton téléphone. Amana & Pudeur.</p>
 
 <script>
 let dateDebut = localStorage.getItem('nissaDateDebut');
@@ -84,12 +76,10 @@ function updateAffichage() {
     const infoGhusl = document.getElementById('infoGhusl');
     const btnStart = document.getElementById('btnStart');
     const btnStop = document.getElementById('btnStop');
-    const calBox = document.getElementById('calendrierBox');
 
     if (dateDebut) {
         const debut = new Date(dateDebut); debut.setHours(0,0,0,0);
         const diffJours = Math.floor((ajd - debut) / 86400000);
-        calBox.classList.remove('hide');
 
         if (diffJours >= 0 && diffJours < dureeRegles) {
             statutBox.className = 'statut interdit';
@@ -113,7 +103,7 @@ function updateAffichage() {
         statutBox.innerHTML = 'Statut : Prière & Jeûne autorisés ✅';
         infoCycle.innerHTML = `<b>Bienvenue ma sœur</b> - Clique au 1er jour de tes règles`;
         infoGhusl.innerHTML = ''; btnStart.classList.remove('hide'); btnStop.classList.add('hide');
-        calBox.classList.add('hide');
+        dessinerCalendrier(null, ajd);
     }
 }
 
@@ -123,25 +113,31 @@ function dessinerCalendrier(debut, ajd) {
     jours.forEach(j => cal.innerHTML += `<div class="jour jour-header">${j}</div>`);
 
     const premierJour = new Date(ajd.getFullYear(), ajd.getMonth(), 1);
-    const decalage = (premierJour.getDay() + 6) % 7; // Lundi = 0
+    const decalage = (premierJour.getDay() + 6) % 7;
     for(let i=0;i<decalage;i++) cal.innerHTML += `<div class="jour"></div>`;
 
     const nbJours = new Date(ajd.getFullYear(), ajd.getMonth()+1, 0).getDate();
-    const finRegles = new Date(debut); finRegles.setDate(debut.getDate() + dureeRegles);
-    const ovulation = new Date(debut); ovulation.setDate(debut.getDate() + 14);
-    const fertiliteDebut = new Date(ovulation); fertiliteDebut.setDate(ovulation.getDate() - 3);
-    const fertiliteFin = new Date(ovulation); fertiliteFin.setDate(ovulation.getDate() + 1);
-    const prochaines = new Date(debut); prochaines.setDate(debut.getDate() + dureeCycle);
-    const prochainesFin = new Date(prochaines); prochainesFin.setDate(prochaines.getDate() + dureeRegles);
+
+    let finRegles, ovulation, fertiliteDebut, fertiliteFin, prochaines, prochainesFin;
+    if(debut){
+        finRegles = new Date(debut); finRegles.setDate(debut.getDate() + dureeRegles);
+        ovulation = new Date(debut); ovulation.setDate(debut.getDate() + 14);
+        fertiliteDebut = new Date(ovulation); fertiliteDebut.setDate(ovulation.getDate() - 3);
+        fertiliteFin = new Date(ovulation); fertiliteFin.setDate(ovulation.getDate() + 1);
+        prochaines = new Date(debut); prochaines.setDate(debut.getDate() + dureeCycle);
+        prochainesFin = new Date(prochaines); prochainesFin.setDate(prochaines.getDate() + dureeRegles);
+    }
 
     for(let d=1; d<=nbJours; d++){
         const dateBoucle = new Date(ajd.getFullYear(), ajd.getMonth(), d);
         let classe = 'jour';
         if(dateBoucle.getTime() === ajd.getTime()) classe += ' aujourdhui';
-        if(dateBoucle >= debut && dateBoucle < finRegles) classe += ' regles';
-        else if(dateBoucle.getTime() === finRegles.getTime()) classe += ' ghusl';
-        else if(dateBoucle >= fertiliteDebut && dateBoucle <= fertiliteFin) classe += ' fertilite';
-        else if(dateBoucle >= prochaines && dateBoucle < prochainesFin) classe += ' prediction';
+        if(debut){
+            if(dateBoucle >= debut && dateBoucle < finRegles) classe += ' regles';
+            else if(dateBoucle.getTime() === finRegles.getTime()) classe += ' ghusl';
+            else if(dateBoucle >= fertiliteDebut && dateBoucle <= fertiliteFin) classe += ' fertilite';
+            else if(dateBoucle >= prochaines && dateBoucle < prochainesFin) classe += ' prediction';
+        }
         cal.innerHTML += `<div class="${classe}">${d}</div>`;
     }
 }
