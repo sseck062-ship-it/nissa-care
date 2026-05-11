@@ -6,35 +6,73 @@
 <title>Nisâa Care - Suivi du Cycle</title>
 <style>
 body{font-family:sans-serif;background:#FFF5F8;color:#333;margin:0;padding:20px;text-align:center}
-h1{color:#B83280} .btn{background:#B83280;color:white;padding:15px 30px;border:none;border-radius:30px;font-size:18px;margin:10px}
-.card{background:white;padding:20px;border-radius:15px;margin:15px 0;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-.bismi{font-size:14px;color:#666;margin-bottom:20px}
+h1{color:#B83280;margin:10px 0} 
+.btn{background:#B83280;color:white;padding:14px 25px;border:none;border-radius:30px;font-size:16px;margin:8px;cursor:pointer;width:90%;font-weight:bold}
+.btn-stop{background:#D32F2F}
+.card{background:white;padding:20px;border-radius:15px;margin:15px 0;box-shadow:0 2px 10px rgba(0,0,0,0.08);text-align:left}
+.bismi{font-size:13px;color:#666;margin-bottom:15px}
+.halal{font-size:12px;color:#B83280;font-weight:bold;background:#FCE4EC;padding:5px 10px;border-radius:20px;display:inline-block;margin-bottom:15px}
+h2{color:#B83280;font-size:18px;margin-top:0}
+.statut{font-size:16px;font-weight:bold;padding:10px;border-radius:10px;margin:10px 0}
+.autorise{background:#E8F5E9;color:#2E7D32}
+.interdit{background:#FFEBEE;color:#C62828}
+.info{font-size:14px;color:#666;margin:5px 0}
+.hide{display:none}
 </style>
 </head>
 <body>
 <p class="bismi">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
 <h1>Nisâa Care 🌙</h1>
-<p>Ton cycle, ta santé, ta sérénité</p>
+<p class="halal">100% Halal • 100% Privé • Pour Allah</p>
 
 <div class="card">
-<h2>Mon Cycle</h2>
-<p>Prochaines règles prévues : <b>Dans 12 jours</b></p>
-<p>Phase actuelle : <b>Folliculaire</b></p>
-<button class="btn" onclick="alert('Bientôt : Clique ici le 1er jour de tes règles')">Marquer 1er jour des règles</button>
+<h2>🗓️ Mon Cycle</h2>
+<div id="statutBox" class="statut autorise">Statut : Prière & Jeûne autorisés ✅</div>
+<p class="info" id="infoCycle"><b>Prochaines règles prévues :</b> Cliquez ci-dessous pour commencer</p>
+<p class="info" id="infoGhusl"></p>
+<p class="info" id="infoJours"></p>
+
+<button class="btn" id="btnStart" onclick="startRegles()">Marquer 1er jour des règles</button>
+<button class="btn btn-stop hide" id="btnStop" onclick="stopRegles()">Marquer la fin des règles + Ghusl fait</button>
 </div>
 
 <div class="card">
-<h2>Rappel Fiqh</h2>
-<p>Pendant tes règles : pas de prière, pas de jeûne, pas de toucher du mushaf.</p>
-<p>Fais du dhikr, des duas, écoute le Coran 🤍</p>
+<h2>📚 Rappel Fiqh</h2>
+<p><b>Pendant les menstrues :</b> Pas de salat, pas de jeûne, pas de tawaf, pas de toucher du mushaf.</p>
+<p><b>Tu peux faire :</b> Dhikr, duas, écouter le Coran, apprendre ta religion, être au service de ta famille 🤍</p>
+<p><b>Rattrapage :</b> Les jours de jeûne du Ramadan se rattrapent. Les prières ne se rattrapent pas.</p>
 </div>
 
 <div class="card">
-<h2>Ma Santé</h2>
-<button class="btn">Noter mes symptômes</button>
-<button class="btn">Comment faire le Ghusl ?</button>
+<h2>🤍 Ma Santé & Pureté</h2>
+<button class="btn" onclick="alert('Guide Ghusl :\n\n1. Niyyah dans le cœur\n2. Laver les mains 3 fois\n3. Laver les parties intimes\n4. Faire les ablutions comme pour la prière\n5. Verser l’eau sur la tête 3 fois\n6. Laver tout le côté droit, puis le gauche\n\nQu’Allah accepte ta purification 🤍')">Guide du Ghusl étape par étape</button>
+<button class="btn" onclick="alert('Duas douleurs :\n\nPose ta main où tu as mal et dis 3 fois :\nبِسْمِ اللهِ\n\nPuis 7 fois :\nأَعُوذُ بِاللهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ\n\nQu’Allah te soulage ma sœur 🤍')">Duas contre les douleurs</button>
 </div>
 
-<p style="font-size:12px;margin-top:30px">Nisâa Care V1 - Données 100% privées sur ton téléphone</p>
-</body>
-</html>
+<p style="font-size:11px;margin-top:30px;color:#666">Nisâa Care V2 - Tes données restent UNIQUEMENT sur ton téléphone. Amana & Pudeur avant tout.</p>
+
+<script>
+// TOUT SE PASSE SUR LE TÉLÉPHONE DE LA SŒUR. 0 DONNÉE ENVOYÉE.
+let dateDebut = localStorage.getItem('nissaDateDebut');
+let dureeMoyenne = 28; // Cycle moyen
+let dureeReglesMoy = 6; // Durée moyenne des règles
+
+function updateAffichage() {
+    const aujourdhui = new Date();
+    const statutBox = document.getElementById('statutBox');
+    const infoCycle = document.getElementById('infoCycle');
+    const infoGhusl = document.getElementById('infoGhusl');
+    const infoJours = document.getElementById('infoJours');
+    const btnStart = document.getElementById('btnStart');
+    const btnStop = document.getElementById('btnStop');
+
+    if (dateDebut) {
+        const debut = new Date(dateDebut);
+        const diffJours = Math.floor((aujourdhui - debut) / (1000 * 60 * 60 * 24));
+        
+        if (diffJours >= 0 && diffJours < dureeReglesMoy) {
+            // EN PÉRIODE DE RÈGLES
+            statutBox.className = 'statut interdit';
+            statutBox.innerHTML = 'Statut : Pas de prière ni jeûne ❌';
+            infoCycle.innerHTML = `<b>Jour ${diffJours + 1}</b> de tes règles`;
+            infoGhusl.innerHTML = `G
